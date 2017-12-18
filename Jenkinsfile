@@ -35,6 +35,8 @@ def stepsFor(image, tag) {
             sh '''
             set -e
 
+            docker pull $DOCKER_IMAGE_TAG
+
             echo FROM $DOCKER_IMAGE_TAG > "$DOCKER_FILENAME"
             cat body.Dockerfile >> "$DOCKER_FILENAME"
             echo ENTRYPOINT $(docker inspect -f '{{ .Config.Entrypoint | json }}' "$DOCKER_IMAGE_TAG") >> "$DOCKER_FILENAME"
