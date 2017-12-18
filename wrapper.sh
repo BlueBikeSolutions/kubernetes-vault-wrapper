@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 # Dir in which the rest of the kubernetes-vault files are found
 VAULT_CONFIG_DIR="${TOKEN_CONFIG_DIR:-/var/run/secrets/boostport.com}"
