@@ -45,7 +45,7 @@ if [[ -e "$VAULT_CONFIG_DIR/$VAULT_CA_FILE" ]]; then
 fi
 
 # Wait for vault
-while ! curl "$vault_addr/v1/sys/health" "${curl_args[@]}"; do
+while ! curl "$vault_addr/v1/sys/health" "${curl_args[@]}" 2>&1 >/dev/null ; do
   echo "Vault isn't ready yet" >&2
   sleep 2
 done
