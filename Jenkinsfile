@@ -39,8 +39,17 @@ def stepsFor(image, tag) {
 
             echo FROM $DOCKER_IMAGE_TAG > "$DOCKER_FILENAME"
             cat body.Dockerfile >> "$DOCKER_FILENAME"
-            echo ENTRYPOINT $(docker inspect -f '{{ .Config.Entrypoint | json }}' "$DOCKER_IMAGE_TAG") >> "$DOCKER_FILENAME"
-            echo CMD $(docker inspect -f '{{ .Config.Cmd | json }}' "$DOCKER_IMAGE_TAG") >> "$DOCKER_FILENAME"
+            echo ENTRYPOINT $(
+              docker inspect
+                -f '{{ .Config.Entrypoint | json }}'
+                "$DOCKER_IMAGE_TAG"
+              | sed 's/\[/["/usr/local/bin/kubernetes-vault-wrapper.sh",/'
+            ) >> "$DOCKER_FILENAME"
+            echo CMD $(
+              docker inspect
+                -f '{{ .Config.Cmd | json }}'
+                "$DOCKER_IMAGE_TAG"
+            ) >> "$DOCKER_FILENAME"
 
             docker build \
               -t $DOCKER_IMAGE:$DOCKER_TAG \
