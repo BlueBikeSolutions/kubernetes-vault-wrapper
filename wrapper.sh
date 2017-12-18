@@ -11,7 +11,7 @@ VAULT_TOKEN_FILE="${TOKEN_CONFIG_FILE:-vault-token}"
 VAULT_CA_FILE="${TOKEN_CONFIG_FILE:-ca.crt}"
 
 # Env var prefix for config
-PREFIX=FROMVAULT_a
+PREFIX=FROMVAULT_
 # Separator to separate location and param name
 LOCATION_SEP=.
 
