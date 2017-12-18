@@ -22,6 +22,11 @@ IFS="$OLDIFS"
 
 jq_args=(--raw-output --exit-status)
 
+while [[ ! -e "$VAULT_CONFIG_DIR/$VAULT_TOKEN_FILE" ]]; do
+  echo "Token config doesn't exist yet" >&2
+  sleep 2
+done
+
 # Get the vault address from the config JSON
 vault_addr="$(jq "${jq_args[@]}" '.vaultAddr' < "$VAULT_CONFIG_DIR/$VAULT_TOKEN_FILE")"
 echo "Using vault at $vault_addr" >&2
