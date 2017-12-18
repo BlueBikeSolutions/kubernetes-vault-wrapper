@@ -23,6 +23,7 @@ IFS="$OLDIFS"
 
 jq_args=(--raw-output --exit-status)
 
+# Wait for the token file
 while [[ ! -e "$VAULT_CONFIG_DIR/$VAULT_TOKEN_FILE" ]]; do
   echo "Token config doesn't exist yet" >&2
   sleep 2
@@ -42,6 +43,12 @@ curl_args=(--header "X-Vault-Token:$vault_token" --silent --fail)
 if [[ -e "$VAULT_CONFIG_DIR/$VAULT_CA_FILE" ]]; then
   curl_args+=(--cacert "$VAULT_CONFIG_DIR/$VAULT_CA_FILE")
 fi
+
+# Wait for vault
+while ! curl "$vault_addr/v1/sys/health" "${curl_args[@]}"; do
+  echo "Vault isn't ready yet" >&2
+  sleep 2
+done
 
 # Loop all vars, get their values, set their env
 for var in "${vars[@]}"; do
