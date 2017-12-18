@@ -48,7 +48,7 @@ def stepsFor(image, tag) {
             )
 
             echo FROM $DOCKER_IMAGE_TAG > "$DOCKER_FILENAME"
-            [ -n "$user" ] && echo USER root >> body.Dockerfile
+            [ -n "$user" ] && echo USER root >> "$DOCKER_FILENAME"
             cat body.Dockerfile >> "$DOCKER_FILENAME"
             [ -n "$user" ] && echo USER $(
               docker inspect \
