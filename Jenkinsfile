@@ -67,6 +67,11 @@ def stepsFor(image, tag) {
                 "$DOCKER_IMAGE_TAG" \
             ) >> "$DOCKER_FILENAME"
 
+            echo "BUILDING:"
+            echo "---------"
+            cat "$DOCKER_FILENAME"
+            echo "---------"
+
             docker build \
               -t $DOCKER_IMAGE:$DOCKER_TAG \
               -f "$DOCKER_FILENAME" \
