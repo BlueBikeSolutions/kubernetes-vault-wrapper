@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 if [ -e apt-get ]; then
   apt-get install -y jq curl
 elif [ -e yum ]; then
