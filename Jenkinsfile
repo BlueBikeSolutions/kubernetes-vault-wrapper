@@ -1,7 +1,7 @@
 def toBuild = [
   [image: "postgres", tag: "9.6.2-alpine"],
   [image: "rabbitmq", tag: "3.6-management-alpine"],
-  [image: "redis", tag: "4.0"],
+  [image: "bitnami/redis", tag: "4.0"],
 ]
 
 def steps = toBuild.collectEntries {
@@ -36,6 +36,8 @@ def stepsFor(image, tag) {
           stage("[${image}:${tag}] Docker image") {
             sh '''
             set -e
+
+            DOCKER_FILENAME="$(echo $DOCKER_FILENAME | sed 's#/#-#g')"
 
             docker pull $DOCKER_IMAGE_TAG
 
