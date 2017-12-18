@@ -3,7 +3,7 @@ def toBuild = [
 ]
 
 def steps = toBuild.collectEntries {
-  ["running ${it.image}:${it.tag}": stepsFor(it.image, it.tag)]
+  ["${it.image}:${it.tag}": stepsFor(it.image, it.tag)]
 }
 
 parallel steps
@@ -27,23 +27,25 @@ def stepsFor(image, tag) {
         }
         withEnv([
           "DOCKER_IMAGE=696234038582.dkr.ecr.ap-southeast-2.amazonaws.com/services/${image}",
+          "DOCKER_TAG=${tag}",
           "DOCKER_IMAGE_TAG=${image}:${tag}",
-          "DOCKER_FILENAME=${image}-${tag}.Dockerfile"
+          "DOCKER_FILENAME=${image}-${tag}.Dockerfile",
         ]) {
           stage("[${image}:${tag}] Docker image") {
-            sh """
+            sh '''
             set -e
-            echo FROM \$DOCKER_IMAGE_TAG > "\$DOCKER_FILENAME"
-            cat body.Dockerfile >> "\$DOCKER_FILENAME"
-            echo ENTRYPOINT $(docker inspect -f '{{ .Config.Entrypoint | json }}' "\$DOCKER_IMAGE_TAG") >> "\$DOCKER_FILENAME"
-            echo CMD $(docker inspect -f '{{ .Config.Cmd | json }}' "\$DOCKER_IMAGE_TAG") >> "\$DOCKER_FILENAME"
+
+            echo FROM $DOCKER_IMAGE_TAG > "$DOCKER_FILENAME"
+            cat body.Dockerfile >> "$DOCKER_FILENAME"
+            echo ENTRYPOINT $(docker inspect -f '{{ .Config.Entrypoint | json }}' "$DOCKER_IMAGE_TAG") >> "$DOCKER_FILENAME"
+            echo CMD $(docker inspect -f '{{ .Config.Cmd | json }}' "$DOCKER_IMAGE_TAG") >> "$DOCKER_FILENAME"
 
             docker build \
-              -t \$DOCKER_IMAGE:${tag} \
-              -f "\$DOCKER_FILENAME" \
+              -t $DOCKER_IMAGE:$DOCKER_TAG \
+              -f "$DOCKER_FILENAME" \
               .
-            docker push \$DOCKER_IMAGE:${tag}
-            """
+            docker push $DOCKER_IMAGE:$DOCKER_TAG
+            '''
           }
         }
       }
