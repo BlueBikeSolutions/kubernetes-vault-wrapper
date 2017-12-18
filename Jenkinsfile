@@ -43,7 +43,7 @@ def stepsFor(image, tag) {
               docker inspect \
                 -f '{{ .Config.Entrypoint | json }}' \
                 "$DOCKER_IMAGE_TAG" \
-              | sed 's/\\\\[/["/usr/local/bin/kubernetes-vault-wrapper.sh",/'
+              | sed 's/^./["/usr/local/bin/kubernetes-vault-wrapper.sh",/'
             ) >> "$DOCKER_FILENAME"
             echo CMD $(
               docker inspect \
