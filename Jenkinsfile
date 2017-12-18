@@ -43,6 +43,11 @@ def stepsFor(image, tag) {
 
             echo FROM $DOCKER_IMAGE_TAG > "$DOCKER_FILENAME"
             cat body.Dockerfile >> "$DOCKER_FILENAME"
+            echo USER $(
+              docker inspect \
+                -f '{{ .Config.User }}' \
+                "$DOCKER_IMAGE_TAG"
+            )
             echo ENTRYPOINT $(
               docker inspect \
                 -f '{{ .Config.Entrypoint | json }}' \
