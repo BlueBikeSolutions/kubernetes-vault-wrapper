@@ -29,7 +29,11 @@ def stepsFor(image, tag) {
           stage("[${image}:${tag}] Docker image") {
             sh """
             set -e
-            docker build -t \$DOCKER_IMAGE:${tag} ${image}.Dockerfile
+            docker build \
+              -t \$DOCKER_IMAGE:${tag} \
+              -f ${image}.Dockerfile \
+              --build-arg "version=${image}:${tag}" \
+              .
             docker push \$DOCKER_IMAGE:${tag}
             """
           }
