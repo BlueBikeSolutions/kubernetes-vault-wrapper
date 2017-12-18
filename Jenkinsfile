@@ -25,15 +25,13 @@ def stepsFor(image, tag) {
           eval "$(docker run --rm awscli ecr get-login --no-include-email --region ap-southeast-2)"
           '''
         }
-        dir(path: name) {
-          withEnv(["DOCKER_IMAGE=696234038582.dkr.ecr.ap-southeast-2.amazonaws.com/services/${image}"]) {
-            stage("[${image}:${tag}] Docker image") {
-              sh """
-              set -e
-              docker build -t \$DOCKER_IMAGE:${tag} ${image}.Dockerfile
-              docker push \$DOCKER_IMAGE:${tag}
-              """
-            }
+        withEnv(["DOCKER_IMAGE=696234038582.dkr.ecr.ap-southeast-2.amazonaws.com/services/${image}"]) {
+          stage("[${image}:${tag}] Docker image") {
+            sh """
+            set -e
+            docker build -t \$DOCKER_IMAGE:${tag} ${image}.Dockerfile
+            docker push \$DOCKER_IMAGE:${tag}
+            """
           }
         }
       }
