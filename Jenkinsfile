@@ -1,5 +1,5 @@
 def toBuild = [
-  ["image": "rabbitmq", "tag": "3.6-management-alpine"],
+  [image: "rabbitmq", tag: "3.6-management-alpine"],
 ]
 
 def steps = toBuild.collectEntries {
