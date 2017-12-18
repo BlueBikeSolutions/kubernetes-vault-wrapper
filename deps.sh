@@ -3,6 +3,7 @@
 set -e
 
 if which apt-get 2>&1 >/dev/null ; then
+  apt-get update
   apt-get install -y jq curl
 elif which yum 2>&1 >/dev/null ; then
   yum install jq curl
