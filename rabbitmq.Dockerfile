@@ -1,6 +1,6 @@
-ARG version
+ARG VERSION
 
-FROM rabbitmq:${version}
+FROM rabbitmq:$VERSION
 
 COPY ./deps.sh /usr/local/bin/kubernetes-vault-wrapper-deps.sh
 RUN /usr/local/bin/kubernetes-vault-wrapper-deps.sh

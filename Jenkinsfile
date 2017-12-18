@@ -32,7 +32,7 @@ def stepsFor(image, tag) {
             docker build \
               -t \$DOCKER_IMAGE:${tag} \
               -f ${image}.Dockerfile \
-              --build-arg "version=${image}:${tag}" \
+              --build-arg "VERSION=${image}:${tag}" \
               .
             docker push \$DOCKER_IMAGE:${tag}
             """
