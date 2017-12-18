@@ -29,10 +29,14 @@ def stepsFor(image, tag) {
           stage("[${image}:${tag}] Docker image") {
             sh """
             set -e
+            echo FROM ${image}:${tag} > "${image}-${tag}.Dockerfile"
+            cat body.Dockerfile >> "${image}-${tag}.Dockerfile"
+            echo ENTRYPOINT $(docker inspect -f '{{ .Config.Entrypoint | json }}' "${image}:${tag}") >> "${image}-${tag}.Dockerfile"
+            echo CMD $(docker inspect -f '{{ .Config.Cmd | json }}' "${image}:${tag}") >> "${image}-${tag}.Dockerfile"
+
             docker build \
               -t \$DOCKER_IMAGE:${tag} \
-              -f ${image}.Dockerfile \
-              --build-arg "VERSION=${image}:${tag}" \
+              -f "${image}-${tag}.Dockerfile" \
               .
             docker push \$DOCKER_IMAGE:${tag}
             """
