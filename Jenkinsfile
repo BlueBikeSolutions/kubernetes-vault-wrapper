@@ -41,13 +41,20 @@ def stepsFor(image, tag) {
 
             docker pull $DOCKER_IMAGE_TAG
 
-            echo FROM $DOCKER_IMAGE_TAG > "$DOCKER_FILENAME"
-            cat body.Dockerfile >> "$DOCKER_FILENAME"
-            echo USER $(
+            user=$(
               docker inspect \
                 -f '{{ .Config.User }}' \
                 "$DOCKER_IMAGE_TAG"
             )
+
+            echo FROM $DOCKER_IMAGE_TAG > "$DOCKER_FILENAME"
+            [[ -n "$user" ]] && echo USER root >> body.Dockerfile
+            cat body.Dockerfile >> "$DOCKER_FILENAME"
+            [[ -n "$user" ]] && echo USER $(
+              docker inspect \
+                -f '{{ .Config.User }}' \
+                "$DOCKER_IMAGE_TAG"
+            ) >> "$DOCKER_FILENAME"
             echo ENTRYPOINT $(
               docker inspect \
                 -f '{{ .Config.Entrypoint | json }}' \
