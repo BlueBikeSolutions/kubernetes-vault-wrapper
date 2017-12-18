@@ -25,18 +25,22 @@ def stepsFor(image, tag) {
           eval "$(docker run --rm awscli ecr get-login --no-include-email --region ap-southeast-2)"
           '''
         }
-        withEnv(["DOCKER_IMAGE=696234038582.dkr.ecr.ap-southeast-2.amazonaws.com/services/${image}"]) {
+        withEnv([
+          "DOCKER_IMAGE=696234038582.dkr.ecr.ap-southeast-2.amazonaws.com/services/${image}",
+          "DOCKER_IMAGE_TAG=${image}:${tag}",
+          "DOCKER_FILENAME=${image}-${tag}.Dockerfile"
+        ]) {
           stage("[${image}:${tag}] Docker image") {
             sh """
             set -e
-            echo FROM ${image}:${tag} > "${image}-${tag}.Dockerfile"
-            cat body.Dockerfile >> "${image}-${tag}.Dockerfile"
-            echo ENTRYPOINT $(docker inspect -f '{{ .Config.Entrypoint | json }}' "${image}:${tag}") >> "${image}-${tag}.Dockerfile"
-            echo CMD $(docker inspect -f '{{ .Config.Cmd | json }}' "${image}:${tag}") >> "${image}-${tag}.Dockerfile"
+            echo FROM ${DOCKER_IMAGE_TAG} > "${DOCKER_FILENAME}"
+            cat body.Dockerfile >> "${DOCKER_FILENAME}"
+            echo ENTRYPOINT $(docker inspect -f '{{ .Config.Entrypoint | json }}' "${DOCKER_IMAGE_TAG}") >> "${DOCKER_FILENAME}"
+            echo CMD $(docker inspect -f '{{ .Config.Cmd | json }}' "${DOCKER_IMAGE_TAG}") >> "${DOCKER_FILENAME}"
 
             docker build \
               -t \$DOCKER_IMAGE:${tag} \
-              -f "${image}-${tag}.Dockerfile" \
+              -f "${DOCKER_FILENAME}" \
               .
             docker push \$DOCKER_IMAGE:${tag}
             """
