@@ -13,14 +13,14 @@ def stepsFor(image, tag) {
   return {
     node('master') {
       ansiColor('xterm') {
-        stage("[${name}] Cloning Repo") {
+        stage("[${image}:${tag}] Cloning Repo") {
           git credentialsId: 'ghsignin', url: 'https://github.com/BlueBikeSolutions/kubernetes-vault-wrapper'
           checkout scm
           echo "\u2600 BUILD_URL=${env.BUILD_URL}"
           def workspace = pwd()
           echo "\u2600 workspace=${workspace}"
         }
-        stage("[${name}] Docker login") {
+        stage("[${image}:${tag}] Docker login") {
           sh '''
           eval "$(docker run --rm awscli ecr get-login --no-include-email --region ap-southeast-2)"
           '''
