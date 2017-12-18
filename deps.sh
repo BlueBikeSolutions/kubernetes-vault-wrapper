@@ -2,11 +2,11 @@
 
 set -e
 
-if [ -e apt-get ]; then
+if which apt-get 2>&1 >/dev/null ; then
   apt-get install -y jq curl
-elif [ -e yum ]; then
+elif which yum 2>&1 >/dev/null ; then
   yum install jq curl
-elif [ -e apk ]; then
+elif which apk 2>&1 >/dev/null ; then
   apk add --no-cache jq curl
 else
   echo Unsupported platform >&2
