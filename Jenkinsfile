@@ -1,5 +1,6 @@
 def toBuild = [
   [image: "postgres", tag: "9.6.2-alpine"],
+  [image: "postgres", tag: "9.6.2"],
   [image: "rabbitmq", tag: "3.6-management-alpine"],
   [image: "bitnami/redis", tag: "4.0"],
 ]
