@@ -20,6 +20,12 @@ IFS=$'\n'
 vars=($(env | grep "^$PREFIX"))
 IFS="$OLDIFS"
 
+# Get the filenames to template
+OLDIFS="$IFS"
+IFS=' '
+tpls=($FROMVAULTTPLS)
+IFS="$OLDIFS"
+
 jq_args=(--raw-output --exit-status)
 
 # Wait for the token file
@@ -78,6 +84,11 @@ for var in "${vars[@]}"; do
 
   # Export the secret
   eval "export $name='$secret'"
+done
+
+for in_name in "${tpls[@]}"; do
+  out_name="$(basename "$in_name" .tpl)"
+  envsubst < $in_name > $out_name
 done
 
 # Replace ourself with the command args
