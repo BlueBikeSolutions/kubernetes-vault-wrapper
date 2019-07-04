@@ -5,6 +5,7 @@ def toBuild = [
   [image: "rabbitmq", tag: "3.6.12-management-alpine"],
   [image: "kbudde/rabbitmq-exporter", tag: "v1.0.0-RC6.1"],
   [image: "bitnami/redis", tag: "4.0"],
+  [image: "silviof/docker-matrix", tag: "latest"],
 ]
 
 def steps = toBuild.collectEntries {
