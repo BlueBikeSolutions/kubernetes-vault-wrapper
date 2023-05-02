@@ -1,13 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Builds and pushes docker images for services used by CI and localdev
 set -ue
 set -x
 
 declare -A projects=(\
-    ["postgres"]="13.3-alpine"\
+    #["arm64v8/postgres"]="14.5-alpine"\
+    #["postgres"]="13.3-alpine"\
     ["rabbitmq"]="3.9.7-management-alpine"\
-    ["bitnami/redis"]="4.0"\
+    #["bitnami/redis"]="4.0"\
     )
 
 # Should be set before running, else -u will exit non 0.
